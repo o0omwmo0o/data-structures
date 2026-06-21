@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>归并排序演示</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f4f4f4;padding:30px}
+.container{max-width:700px;margin:auto;background:#fff;padding:20px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+input{width:100%;padding:10px;margin:10px 0}
+button{padding:10px 18px;margin-right:10px;cursor:pointer}
+pre{background:#eee;padding:12px;border-radius:6px;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>归并排序（Merge Sort）</h2>
+<p>请输入整数，用英文逗号分隔，例如：5,3,8,1,9,2</p>
+<input id="nums" value="5,3,8,1,9,2">
+<button onclick="runSort()">开始排序</button>
+<button onclick="randomData()">随机生成</button>
+<h3>结果</h3>
+<pre id="out"></pre>
+</div>
+
+<script>
+function merge(left,right){
+    let res=[];
+    while(left.length && right.length){
+        if(left[0]<=right[0]) res.push(left.shift());
+        else res.push(right.shift());
+    }
+    return res.concat(left,right);
+}
+function mergeSort(arr){
+    if(arr.length<=1) return arr;
+    let mid=Math.floor(arr.length/2);
+    return merge(
+        mergeSort(arr.slice(0,mid)),
+        mergeSort(arr.slice(mid))
+    );
+}
+function runSort(){
+    let text=document.getElementById("nums").value.trim();
+    if(!text){alert("请输入数据");return;}
+    let arr=text.split(",").map(x=>Number(x.trim()));
+    if(arr.some(isNaN)){alert("请输入合法整数");return;}
+    let sorted=mergeSort(arr.slice());
+    document.getElementById("out").textContent=
+        "原数组：["+arr.join(", ")+"]\n\n"+
+        "排序后：["+sorted.join(", ")+"]";
+}
+function randomData(){
+    let arr=[];
+    for(let i=0;i<10;i++) arr.push(Math.floor(Math.random()*100));
+    document.getElementById("nums").value=arr.join(",");
+    runSort();
+}
+</script>
+</body>
+</html>
